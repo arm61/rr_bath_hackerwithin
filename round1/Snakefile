@@ -1,0 +1,24 @@
+rule all:
+    input:
+        'paper.pdf'
+
+rule make_paper:
+    input:
+        'paper.tex',
+        'requirements.out'
+    output:
+        'paper.pdf'
+    shell:
+        """
+        pdflatex paper.tex
+        """
+
+rule install_packages:
+    input:
+        'requirements.txt'
+    output:
+        'requirements.out'
+    shell:
+        """
+        pip install -r requirements.txt > requirements.out
+        """

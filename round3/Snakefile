@@ -1,0 +1,50 @@
+FIGS = ['figure1.pdf']
+
+rule all:
+    input:
+        'paper.pdf'
+
+rule make_paper:
+    input:
+        'paper.tex',
+        'paper.bib',
+        'requirements.out',
+        FIGS
+    output:
+        'paper.pdf'
+    shell:
+        """
+        pdflatex paper.tex
+        bibtex paper.aux
+        pdflatex paper.tex
+        pdflatex paper.tex
+        """
+
+rule plot_graphs:
+    input:
+        'analysis.py'
+    output:
+        FIGS
+    shell:
+        """
+        python analysis.py
+        """
+
+rule script_graphs:
+    input:
+        'analysis.ipynb',
+        'requirements.out'
+    output:
+        'analysis.py'
+    shell:
+        'jupyter-nbconvert --to script analysis.ipynb'
+
+rule install_packages:
+    input:
+        'requirements.txt'
+    output:
+        'requirements.out'
+    shell:
+        """
+        pip install -r requirements.txt > requirements.out
+        """
